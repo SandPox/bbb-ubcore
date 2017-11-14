@@ -1,5 +1,5 @@
 # port of roseapple-pi board to snappy ubuntu core
-build of port for roseapple pi to Ubuntu core series 16 [Snappy Ubuntu Core](http://developer.ubuntu.com/snappy/) 
+build of port for roseapple pi to Ubuntu core series 16 [Snappy Ubuntu Core](http://developer.ubuntu.com/snappy/)
 
 ## Structure
 builder: build board image for Ubuntu core via makefiles, and that includes Gadget snap and Kernel snap.  
@@ -19,15 +19,21 @@ sudo snap install --devmode --edge ubuntu-image
 
 Note: there is no 4.x cross toolchain available in Ubuntu 16.04 LTS. Use the linaro toolchain instead:
 ```
-wget https://releases.linaro.org/components/toolchain/binaries/4.9-2016.02/arm-linux-gnueabihf/gcc-linaro-4.9-2016.02-x86_64_arm-linux-gnueabihf.tar.xz
-unxz gcc-linaro-4.9-2016.02-x86_64_arm-linux-gnueabihf.tar.xz
-export PATH=$PWD/gcc-linaro-4.9-2016.02-x86_64_arm-linux-gnueabihf/bin/
+mkdir -p $HOME/bin
+cd $HOME/bin
+wget https://releases.linaro.org/components/toolchain/binaries/latest-4/arm-linux-gnueabihf/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf.tar.xz
+unxz gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf.tar.xz
+tar xvf gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf.tar
+cat <<EOF >> $HOME/.bashrc
+export PATH=$PATH:$HOME/bin/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin/
+EOF
+source $HOME/.bashrc
 ```
 
 You can test if the right compiler is setup by checking that you get a 4.9 compiler version like:
 ```
 arm-linux-gnueabihf-gcc --version
-arm-linux-gnueabihf-gcc (Linaro GCC 4.9-2016.02) 4.9.4 20151028 (prerelease)
+arm-linux-gnueabihf-gcc (Linaro GCC 4.9-2017.01) 4.9.4
 Copyright (C) 2015 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
@@ -57,7 +63,7 @@ A `Makefile` is provided to build Snappy, Gadget snap, U-Boot, Kernel snap from 
 To build it all, just run `make snappy`. This will produce a Snappy image, a gadget snap `roseapple-pi_x.y_all.snap` and a kernel snap `roseapple-pi-kernel_x.y.z.snap` for device part, which can be used to build your own Snappy image.
 
 ### Custom Image
-You can build custom image with extra snaps included, 
+You can build custom image with extra snaps included,
 ```bash
 /snap/bin/ubuntu-image \
 	-c <channel for core image> \
@@ -89,7 +95,7 @@ make kernelsnap
 ```
 
 ### Rebuild a snappy
-To rebuild the snappy or other parts, just type `make clean` or `make clean-{prefix}`. The prefix will be u-boot, gadget, kernelsnap, etc. 
+To rebuild the snappy or other parts, just type `make clean` or `make clean-{prefix}`. The prefix will be u-boot, gadget, kernelsnap, etc.
 
 ## Flash to SD card
 Before dd, we suggest the SD card storage should be umounted to safely clean up.
