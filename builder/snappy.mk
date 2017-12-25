@@ -20,13 +20,15 @@ build-snappy:
 	@echo "build snappy..."
 	$(UBUNTU_IMAGE) \
 		-c $(UBUNTU_CORE_CH) \
-		--image-size 3.5G \
+		--image-size 3G \
+		--extra-snaps bluez \
+		--extra-snaps modem-manager \
+		--extra-snaps network-manager \
 		--extra-snaps $(GADGET_SNAP) \
 		--extra-snaps $(KERNEL_SNAP) \
 		--extra-snaps snapweb \
 		-o $(SNAPPY_IMAGE) \
 		$(GADGET_MODEL)
-
 
 pack:
 	pxz -9 $(SNAPPY_IMAGE)

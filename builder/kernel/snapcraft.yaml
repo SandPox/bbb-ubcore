@@ -16,9 +16,16 @@ parts:
             - CONFIG_LOCALVERSION="-beaglebone-ubuntucore"
             - CONFIG_DEBUG_INFO=n
             - CONFIG_SQUASHFS=m
+            - CONFIG_BLK_DEV_LOOP=m
+            - CONFIG_CONFIGFS_FS=y
+            - CONFIG_MD=y
+            - CONFIG_BLK_DEV_DM=y
+            - CONFIG_BLK_DEV_RAM=y
+            - CONFIG_BLK_DEV_RAM_SIZE=65536
+            - CONFIG_TMPFS_POSIX_ACL=y
+            - CONFIG_DEVTMPFS=y
+            - CONFIG_DEVTMPFS_MOUNT=y
             - CONFIG_DEVPTS_MULTIPLE_INSTANCES=y
-            - CONFIG_RTL8192U=m
-            - CONFIG_MAC80211_LEDS=y
             - CONFIG_RFKILL_LEDS=y
             - CONFIG_LEDS_TRIGGERS=y
 
