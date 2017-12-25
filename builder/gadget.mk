@@ -1,21 +1,14 @@
 include common.mk
 
-GADGET_UBOOT_BIN := $(GADGET_DIR)/boot-assets/u-boot.bin
-GADGET_SNAP := $(OUTPUT_DIR)/roseapple-pi_$(GADGET_VERSION)*.snap
-
-# for preloader packaging
-ifneq "$(findstring ARM, $(shell grep -m 1 'model name.*: ARM' /proc/cpuinfo))" ""
-BOOTLOADER_PACK=bootloader_pack.arm
-else
-BOOTLOADER_PACK=bootloader_pack
-endif
+GADGET_UBOOT_BIN := $(GADGET_DIR)/boot-assets/u-boot.img
+GADGET_UBOOT_SPL := $(GADGET_DIR)/boot-assets/MLO
+GADGET_SNAP := $(OUTPUT_DIR)/beaglebone-blue_$(GADGET_VERSION)*.snap
 
 all: build
 
 clean:
 	rm -rf $(GADGET_DIR)/boot-assets
 	rm -f $(GADGET_DIR)/uboot.conf
-	rm -f $(GADGET_DIR)/uboot.env
 	rm -f $(GADGET_SNAP)
 
 distclean: clean
@@ -24,15 +17,12 @@ u-boot:
 	@if [ ! -d $(GADGET_DIR)/boot-assets ] ; then mkdir $(GADGET_DIR)/boot-assets; fi
 	@if [ ! -f $(UBOOT_BIN) ] ; then echo "Build u-boot first."; exit 1; fi
 	cp -f $(UBOOT_BIN) $(GADGET_UBOOT_BIN)
+	cp -f $(UBOOT_SPL) $(GADGET_UBOOT_SPL)
+	cp -f $(GADGET_DIR)/uEnv.txt $(GADGET_DIR)/boot-assets/uEnv.txt
 
-preload: u-boot
-	$(TOOLS_DIR)/utils/$(BOOTLOADER_PACK) $(PRELOAD_DIR)/bootloader.bin $(PRELOAD_DIR)/bootloader.ini $(GADGET_DIR)/boot-assets/bootloader.bin
-	mkenvimage -r -s 131072  -o $(GADGET_DIR)/uboot.env $(GADGET_DIR)/uboot.env.in
-	@if [ ! -f $(GADGET_DIR)/uboot.conf ]; then ln -s uboot.env $(GADGET_DIR)/uboot.conf; fi
-
-snappy: preload
+snappy: u-boot
 	snapcraft snap gadget
 
-build: u-boot preload snappy
+build: u-boot snappy
 
-.PHONY: u-boot snappy gadget build preload
+.PHONY: u-boot snappy gadget build

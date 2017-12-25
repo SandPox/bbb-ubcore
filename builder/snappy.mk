@@ -1,12 +1,12 @@
 include common.mk
 
-SNAPPY_IMAGE := $(shell i="0"; while ls roseapple-pi-`date +%Y%m%d`-$${i}.img* 1> /dev/null 2>&1; do i=$$((i+1)); done; echo "roseapple-pi-`date +%Y%m%d`-$${i}.img")
+SNAPPY_IMAGE := $(shell i="0"; while ls beaglebone-blue-`date +%Y%m%d`-$${i}.img* 1> /dev/null 2>&1; do i=$$((i+1)); done; echo "beaglebone-blue-`date +%Y%m%d`-$${i}.img")
 # yes for latest version; no for the specific revision of edge/stable channel
 UBUNTU_CORE_CH := beta
-GADGET_MODEL := roseapple.model
-GADGET_SNAP := roseapple-pi_$(GADGET_VERSION)_armhf.snap
+GADGET_MODEL := beaglebone-blue.model
+GADGET_SNAP := beaglebone-blue_$(GADGET_VERSION)_armhf.snap
 KERNEL_SNAP_VERSION := `grep version: $(KERNEL_BUILD)/prime/meta/snap.yaml | awk '{print $$2}'`
-KERNEL_SNAP := roseapple-pi-kernel_$(KERNEL_SNAP_VERSION)_armhf.snap
+KERNEL_SNAP := beaglebone-blue-kernel_$(KERNEL_SNAP_VERSION)_armhf.snap
 SNAPPY_WORKAROUND := no
 UBUNTU_IMAGE=/snap/bin/ubuntu-image
 
@@ -20,7 +20,7 @@ build-snappy:
 	@echo "build snappy..."
 	$(UBUNTU_IMAGE) \
 		-c $(UBUNTU_CORE_CH) \
-		--image-size 4G \
+		--image-size 3.5G \
 		--extra-snaps $(GADGET_SNAP) \
 		--extra-snaps $(KERNEL_SNAP) \
 		--extra-snaps snapweb \
@@ -28,17 +28,9 @@ build-snappy:
 		$(GADGET_MODEL)
 
 
-fix-bootflag: build-snappy
-	dd conv=notrunc if=boot_fix.bin of=$(SNAPPY_IMAGE) seek=440 oflag=seek_bytes
-
-workaround: fix-bootflag
-ifeq ($(SNAPPY_WORKAROUND),yes)
-	@echo "workaround something..."
-endif
-
-pack: workaround
+pack:
 	pxz -9 $(SNAPPY_IMAGE)
 
-build: build-snappy fix-bootflag workaround pack
+build: build-snappy pack
 
-.PHONY: build-snappy fix-bootflag workaround pack build
+.PHONY: build-snappy pack build

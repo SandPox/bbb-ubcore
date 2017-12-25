@@ -1,0 +1,11 @@
+{
+  "type": "model",
+  "authority-id": "esaz0n3pPYZcYHW087OxzBSbe0GQR4bp",
+  "brand-id": "esaz0n3pPYZcYHW087OxzBSbe0GQR4bp",
+  "series": "16",
+  "model": "beaglebone-blue",
+  "architecture": "armhf",
+  "gadget": "beaglebone-blue",
+  "kernel": "beaglebone-blue-kernel",
+  "timestamp": "2017-12-25T10:28:28+00:00"
+}

@@ -1,8 +1,8 @@
-name: roseapple-pi
+name: beaglebone-blue
 version: 16.04-1
-summary: Roseapple Pi support package
+summary: BeagleBone Blue support package
 description: |
- Support files for booting Roseapple Pi
+ Support files for booting BeagleBone Blue
 type: gadget
 architectures:
     - armhf
